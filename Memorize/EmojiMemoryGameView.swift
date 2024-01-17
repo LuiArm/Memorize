@@ -8,45 +8,39 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-    @ObservedObject var game: EmojiMemoryGame
+  
     
     var body: some View {
-            ScrollView{
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]){
-                    ForEach(game.cards) {card in
-                        CardView(card: card)
-                            .aspectRatio(2/3, contentMode: .fit)
-                            .onTapGesture {
-                                game.choose(card)
-                            }
-                    }
-                }
-            }
-            .foregroundColor(.red)
-      
-        .padding(.horizontal)
-        .foregroundColor(.red)
+        HStack {
+            CardView()
+            CardView()
+            CardView()
+            CardView()
+        }
+        .foregroundStyle(.orange)
+        .padding()
     }
 }
 
+//Card view to make it reusable
 struct CardView: View {
-    let card: EmojiMemoryGame.Card
+    var isFaceUp: Bool = false
     
     var body: some View {
-        
-        ZStack {
-            let shape = RoundedRectangle(cornerRadius: 20)
-            if card.isFaceUp {
-                shape.fill().foregroundColor(.white)
-                shape.strokeBorder(lineWidth: 3)
-                Text(card.content)
-                    .font(.largeTitle)
-            } else if card.isMatched {
-                shape.opacity(0)
-            } else {
-                shape.fill().foregroundColor(.blue)
+        let shape = RoundedRectangle(cornerSize: CGSize(width: 70, height:70))
+        ZStack{
+            if isFaceUp {
+                shape
+                    .strokeBorder(lineWidth: 2)
+                    .foregroundStyle(.white)
+                shape
+                    .strokeBorder(lineWidth: 2)
+                Text("👻").font(.largeTitle)
+            }else {
+                shape
             }
-        } 
+        }
+        
     }
 }
 
@@ -57,8 +51,8 @@ struct CardView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        let game = EmojiMemoryGame()
-        EmojiMemoryGameView(game: game)
-            .preferredColorScheme(.dark)
+      
+        EmojiMemoryGameView()
+            
     }
 }
