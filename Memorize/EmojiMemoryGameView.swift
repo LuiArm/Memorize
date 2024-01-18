@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-  
+     
+    let emojis = ["👻", "🌮", "🍩","🍜","🍜"]
     
     var body: some View {
         HStack {
-            CardView()
-            CardView()
-            CardView()
-            CardView()
+            ForEach(emojis, id: \.self) { emoji in
+                CardView(content: emoji)
+            }
         }
         .foregroundStyle(.orange)
         .padding()
@@ -26,7 +26,7 @@ struct EmojiMemoryGameView: View {
 struct CardView: View {
     //gives cardview a default value for isFaceUp otherwise need to provide when creating new cardview
    @State var isFaceUp = false
-    
+    var content: String
     var body: some View {
         let shape = RoundedRectangle(cornerSize: CGSize(width: 70, height:70))
         ZStack{
@@ -36,7 +36,7 @@ struct CardView: View {
                     .foregroundStyle(.white)
                 shape
                     .strokeBorder(lineWidth: 2)
-                Text("👻").font(.largeTitle)
+                Text(content).font(.largeTitle)
             }else {
                 //.fill is default for shape
                 shape
