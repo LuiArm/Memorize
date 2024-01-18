@@ -24,7 +24,8 @@ struct EmojiMemoryGameView: View {
 
 //Card view to make it reusable
 struct CardView: View {
-    var isFaceUp: Bool = false
+    //gives cardview a default value for isFaceUp otherwise need to provide when creating new cardview
+   @State var isFaceUp = false
     
     var body: some View {
         let shape = RoundedRectangle(cornerSize: CGSize(width: 70, height:70))
@@ -37,12 +38,27 @@ struct CardView: View {
                     .strokeBorder(lineWidth: 2)
                 Text("👻").font(.largeTitle)
             }else {
+                //.fill is default for shape
                 shape
             }
         }
-        
+        .onTapGesture {
+            print("Tapped")
+            //isFaceUp is a struct so you can call toggle function on it
+            isFaceUp.toggle()
+        }
     }
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
