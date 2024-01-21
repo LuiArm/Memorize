@@ -14,7 +14,10 @@ struct EmojiMemoryGameView: View {
     @State var cardCount: Int = 5
     var body: some View {
         VStack{
-            cards
+            ScrollView{
+                cards
+            }
+            Spacer()
             cardAdjusters
         }
         .padding()
@@ -40,9 +43,10 @@ struct EmojiMemoryGameView: View {
     }
     
     var cards: some View {
-        HStack {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
             ForEach(0..<cardCount, id: \.self) { emoji in
                 CardView(content: emojis[emoji])
+                    .aspectRatio(2/3, contentMode: .fit)
             }
         }
         .foregroundStyle(.orange)
@@ -67,19 +71,18 @@ struct CardView: View {
    @State var isFaceUp = false
     var content: String
     var body: some View {
-        let shape = RoundedRectangle(cornerSize: CGSize(width: 70, height:70))
+        let shape = RoundedRectangle(cornerSize: CGSize(width: 30, height:30))
         ZStack{
-            if isFaceUp {
+            Group {
                 shape
                     .strokeBorder(lineWidth: 2)
                     .foregroundStyle(.white)
                 shape
                     .strokeBorder(lineWidth: 2)
                 Text(content).font(.largeTitle)
-            }else {
+            }.opacity(isFaceUp ? 1 : 0)
                 //.fill is default for shape
-                shape
-            }
+            shape.opacity(isFaceUp ? 0 : 1)
         }
         .onTapGesture {
             print("Tapped")
