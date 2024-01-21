@@ -9,18 +9,57 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
      
-    let emojis = ["👻", "🌮", "🍩","🍜","🍜"]
+    let emojis = ["👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜"]
     
+    @State var cardCount: Int = 5
     var body: some View {
+        VStack{
+            cards
+            cardAdjusters
+        }
+        .padding()
+    }
+    
+    func cardCountAdjusters(by offset: Int, symbol: String) -> some View {
+        Button{
+                cardCount += offset
+        }label: {
+            Image(systemName: symbol)
+        }
+        .disabled(cardCount + offset < 1 || cardCount  + offset > emojis.count)
+    }
+    
+    //Computed property for lightweight view
+    var CardAdder: some View {
+        cardCountAdjusters(by: 1, symbol: "plus.circle")
+    }
+    
+    //Computed property for lightweight view
+    var CardRemover: some View {
+        cardCountAdjusters(by: -1, symbol: "minus.circle")
+    }
+    
+    var cards: some View {
         HStack {
-            ForEach(emojis, id: \.self) { emoji in
-                CardView(content: emoji)
+            ForEach(0..<cardCount, id: \.self) { emoji in
+                CardView(content: emojis[emoji])
             }
         }
         .foregroundStyle(.orange)
-        .padding()
+    }
+    
+    var cardAdjusters: some View {
+        HStack{
+           CardRemover
+            Spacer()
+          CardAdder
+        }
+        .font(.largeTitle)
     }
 }
+
+
+
 
 //Card view to make it reusable
 struct CardView: View {
