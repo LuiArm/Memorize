@@ -8,39 +8,70 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-     
-    let emojis = ["👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜"]
+    @State private var emojis = ["👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜"]
+    @State var cardCount: Int = 6
     
-    @State var cardCount: Int = 5
     var body: some View {
         VStack{
+            Text("MEMORIZE").font(.largeTitle)
             ScrollView{
                 cards
             }
+            .navigationTitle("MEMORIZE!")
             Spacer()
-            cardAdjusters
+            cardThemeButtons
         }
         .padding()
     }
     
-    func cardCountAdjusters(by offset: Int, symbol: String) -> some View {
+    var transportCards = ["🚌","🚌","🚲","🚲","🛻","🛻","🛺","🛺"]
+    var transportButton: some View {
         Button{
-                cardCount += offset
+            cardCount = transportCards.count
+            emojis = transportCards.shuffled()
         }label: {
-            Image(systemName: symbol)
+            Text("Vehicles")
         }
-        .disabled(cardCount + offset < 1 || cardCount  + offset > emojis.count)
     }
     
-    //Computed property for lightweight view
-    var CardAdder: some View {
-        cardCountAdjusters(by: 1, symbol: "plus.circle")
+    var foodCards = ["🍔","🍔","🥐","🥐","🍕","🍕","🥩","🥩"]
+    var foodButton: some View {
+        Button{
+            cardCount = foodCards.count
+            emojis = foodCards.shuffled()
+        }label: {
+            Text("Food")
+        }
     }
     
-    //Computed property for lightweight view
-    var CardRemover: some View {
-        cardCountAdjusters(by: -1, symbol: "minus.circle")
+    var flagCards = ["🇲🇽","🇲🇽","🇵🇸","🇵🇸","🇦🇷","🇦🇷","🇧🇷","🇧🇷"]
+    var flagButton: some View {
+        Button{
+            cardCount = flagCards.count
+            emojis = flagCards.shuffled()
+        }label: {
+            Text("Flags")
+        }
     }
+    
+//    func cardCountAdjusters(by offset: Int, symbol: String) -> some View {
+//        Button{
+//                cardCount += offset
+//        }label: {
+//            Image(systemName: symbol)
+//        }
+//        .disabled(cardCount + offset < 1 || cardCount  + offset > transportCards.count)
+//    }
+    
+//    //Computed property for lightweight view
+//    var CardAdder: some View {
+//        cardCountAdjusters(by: 1, symbol: "plus.circle")
+//    }
+//    
+//    //Computed property for lightweight view
+//    var CardRemover: some View {
+//        cardCountAdjusters(by: -1, symbol: "minus.circle")
+//    }
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
@@ -52,13 +83,13 @@ struct EmojiMemoryGameView: View {
         .foregroundStyle(.orange)
     }
     
-    var cardAdjusters: some View {
-        HStack{
-           CardRemover
-            Spacer()
-          CardAdder
+    var cardThemeButtons: some View {
+        HStack(spacing: 20){
+            transportButton
+            flagButton
+            foodButton
         }
-        .font(.largeTitle)
+        .font(.headline)
     }
 }
 
@@ -68,7 +99,8 @@ struct EmojiMemoryGameView: View {
 //Card view to make it reusable
 struct CardView: View {
     //gives cardview a default value for isFaceUp otherwise need to provide when creating new cardview
-   @State var isFaceUp = false
+    @State var isFaceUp = false
+
     var content: String
     var body: some View {
         let shape = RoundedRectangle(cornerSize: CGSize(width: 30, height:30))
