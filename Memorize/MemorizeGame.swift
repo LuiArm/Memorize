@@ -1,16 +1,17 @@
 //
-//  MemoryGame.swift
+//  MemorizeGame.swift
 //  Memorize
 //
-//  Created by luis armendariz on 4/17/23.
+//  Created by luis armendariz on 1/27/24.
 //
 
 import Foundation
 
 
+
 //struct MemoryGame<CardContent> where CardContent: Equatable {
 //    private(set) var cards: Array<Card>
-//    
+//
 //    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
 //    get {
 //        var faceUpCardIndices = [Int]()
@@ -18,7 +19,7 @@ import Foundation
 //            if cards[index].isFaceUp {
 //                faceUpCardIndices.append(index)
 //            }
-//            
+//
 //        }
 //        set {
 //            for index in cards.indices {
@@ -27,11 +28,11 @@ import Foundation
 //                } else {
 //                    cards[index].isFaceUp = true
 //                }
-//                
+//
 //            }
 //        }
 //    }
-//    
+//
 //    mutating func choose(card: Card) {
 //        if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }),
 //           !cards[chosenIndex].isFaceUp,
@@ -44,14 +45,14 @@ import Foundation
 //                }
 //                cards[chosenIndex].isFaceUp = true
 //            } else {
-//                
+//
 //                indexOfTheOneAndOnlyFaceUpCard = chosenIndex
 //            }
-//            
+//
 //        }
 //        print("\(cards)")
 //    }
-//    
+//
 //    init(numberOfPairOfCards: Int, createCardContent: (Int) -> CardContent) {
 //        cards = []
 //        // add numberOfPairOfCards X 2 cards to cards array
@@ -62,7 +63,7 @@ import Foundation
 //
 //        }
 //    }
-//    
+//
 //    struct Card: Identifiable {
 //        var isFaceUp = false
 //        var isMatched = false
@@ -81,3 +82,19 @@ import Foundation
 //            }
 //        }
 //    }
+
+
+struct MemorizeGame<CardContent> {
+    var cards: Array<Card>
+    
+    func chooseCards(card: Card) {
+        
+    }
+    
+    struct Card {
+        var isFaceUp: Bool
+        var isMatched: Bool
+        let content: CardContent
+        let id: Int
+    }
+}

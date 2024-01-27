@@ -9,7 +9,6 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     @State private var emojis = ["👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜"]
-    @State var cardCount: Int = 6
     
     var body: some View {
         VStack{
@@ -27,7 +26,6 @@ struct EmojiMemoryGameView: View {
     var transportCards = ["🚌","🚌","🚲","🚲","🛻","🛻","🛺","🛺"]
     var transportButton: some View {
         Button{
-            cardCount = transportCards.count
             emojis = transportCards.shuffled()
         }label: {
             Text("Vehicles")
@@ -37,7 +35,6 @@ struct EmojiMemoryGameView: View {
     var foodCards = ["🍔","🍔","🥐","🥐","🍕","🍕","🥩","🥩"]
     var foodButton: some View {
         Button{
-            cardCount = foodCards.count
             emojis = foodCards.shuffled()
         }label: {
             Text("Food")
@@ -47,7 +44,6 @@ struct EmojiMemoryGameView: View {
     var flagCards = ["🇲🇽","🇲🇽","🇵🇸","🇵🇸","🇦🇷","🇦🇷","🇧🇷","🇧🇷"]
     var flagButton: some View {
         Button{
-            cardCount = flagCards.count
             emojis = flagCards.shuffled()
         }label: {
             Text("Flags")
@@ -75,7 +71,7 @@ struct EmojiMemoryGameView: View {
     
     var cards: some View {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
-            ForEach(0..<cardCount, id: \.self) { emoji in
+            ForEach(0..<emojis.count, id: \.self) { emoji in
                 CardView(content: emojis[emoji])
                     .aspectRatio(2/3, contentMode: .fit)
             }
