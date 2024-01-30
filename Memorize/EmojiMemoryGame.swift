@@ -39,5 +39,13 @@ import SwiftUI
 
 
 class EmojiMemoryGame {
-    var model: MemoryGame<String>
+    private var model: MemorizeGame<String>
+    
+    var cards: Array<MemorizeGame<String>.Card> {
+        return model.cards
+    }
+    
+    func choose(_ card: MemorizeGame<String>.Card){
+        model.chooseCards(card: card)
+    }
 }
