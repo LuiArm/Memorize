@@ -39,7 +39,10 @@ import SwiftUI
 
 
 class EmojiMemoryGame {
-    private var model: MemorizeGame<String>
+    private var model = MemorizeGame(numberOfPairsOfCards: 4) { pairIndex in
+        return  ["🛻","🚓","🚝", "🚖","🛴","🚛","🏎️","🚲","🛵","🏍️","🛺","🚔","🚘","🚠","🚀","🛶","⛵️","🚢","🛳️","🚊","✈️"][pairIndex]
+        
+    }
     
     var cards: Array<MemorizeGame<String>.Card> {
         return model.cards

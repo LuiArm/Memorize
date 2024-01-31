@@ -87,14 +87,23 @@ import Foundation
 struct MemorizeGame<CardContent> {
     private (set) var cards: Array<Card>
     
+    init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
+        cards = []
+        // add numberOfPairsOfCards X 2 cards
+        for pairIndex in 0..<numberOfPairsOfCards {
+            let content = cardContentFactory(pairIndex)
+            cards.append(Card(content: content))
+        }
+    }
+    
     func chooseCards(card: Card) {
         
     }
     
     struct Card {
-        var isFaceUp: Bool
-        var isMatched: Bool
+        var isFaceUp = false
+        var isMatched = false
         let content: CardContent
-        let id: Int
+        
     }
 }
