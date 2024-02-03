@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct EmojiMemoryGameView: View {
-    @State private var emojis = ["👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜","👻", "🌮", "🍩","🍜","🍜"]
+    @ObservedObject var viewModel: EmojiMemoryGame 
     
     var body: some View {
         VStack{
@@ -18,37 +18,39 @@ struct EmojiMemoryGameView: View {
             }
             .navigationTitle("MEMORIZE!")
             Spacer()
-            cardThemeButtons
+            Button("Shuffle"){
+                viewModel.shuffle()
+            }
         }
         .padding()
     }
     
-    var transportCards = ["🚌","🚌","🚲","🚲","🛻","🛻","🛺","🛺"]
-    var transportButton: some View {
-        Button{
-            emojis = transportCards.shuffled()
-        }label: {
-            Text("Vehicles")
-        }
-    }
-    
-    var foodCards = ["🍔","🍔","🥐","🥐","🍕","🍕","🥩","🥩"]
-    var foodButton: some View {
-        Button{
-            emojis = foodCards.shuffled()
-        }label: {
-            Text("Food")
-        }
-    }
-    
-    var flagCards = ["🇲🇽","🇲🇽","🇵🇸","🇵🇸","🇦🇷","🇦🇷","🇧🇷","🇧🇷"]
-    var flagButton: some View {
-        Button{
-            emojis = flagCards.shuffled()
-        }label: {
-            Text("Flags")
-        }
-    }
+//    var transportCards = ["🚌","🚌","🚲","🚲","🛻","🛻","🛺","🛺"]
+//    var transportButton: some View {
+//        Button{
+//            emojis = transportCards.shuffled()
+//        }label: {
+//            Text("Vehicles")
+//        }
+//    }
+//    
+//    var foodCards = ["🍔","🍔","🥐","🥐","🍕","🍕","🥩","🥩"]
+//    var foodButton: some View {
+//        Button{
+//            emojis = foodCards.shuffled()
+//        }label: {
+//            Text("Food")
+//        }
+//    }
+//    
+//    var flagCards = ["🇲🇽","🇲🇽","🇵🇸","🇵🇸","🇦🇷","🇦🇷","🇧🇷","🇧🇷"]
+//    var flagButton: some View {
+//        Button{
+//            emojis = flagCards.shuffled()
+//        }label: {
+//            Text("Flags")
+//        }
+//    }
     
 //    func cardCountAdjusters(by offset: Int, symbol: String) -> some View {
 //        Button{
@@ -70,10 +72,11 @@ struct EmojiMemoryGameView: View {
 //    }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 120))]) {
-            ForEach(0..<emojis.count, id: \.self) { emoji in
-                CardView(content: emojis[emoji])
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
+            ForEach(0..<viewModel.cards.count, id: \.self) { index in
+                CardView(viewModel.cards[index])
                     .aspectRatio(2/3, contentMode: .fit)
+                    .padding(4)
             }
         }
         .foregroundStyle(.orange)
@@ -81,9 +84,9 @@ struct EmojiMemoryGameView: View {
     
     var cardThemeButtons: some View {
         HStack(spacing: 20){
-            transportButton
-            flagButton
-            foodButton
+//            transportButton
+//            flagButton
+//            foodButton
         }
         .font(.headline)
     }
@@ -94,28 +97,25 @@ struct EmojiMemoryGameView: View {
 
 //Card view to make it reusable
 struct CardView: View {
-    //gives cardview a default value for isFaceUp otherwise need to provide when creating new cardview
-    @State var isFaceUp = false
-
-    var content: String
+    let card: MemorizeGame<String>.Card
+    
+    init(_ card: MemorizeGame<String>.Card) {
+        self.card = card
+    }
+    
     var body: some View {
         let shape = RoundedRectangle(cornerSize: CGSize(width: 30, height:30))
         ZStack{
             Group {
-                shape
-                    .strokeBorder(lineWidth: 2)
-                    .foregroundStyle(.white)
-                shape
-                    .strokeBorder(lineWidth: 2)
-                Text(content).font(.largeTitle)
-            }.opacity(isFaceUp ? 1 : 0)
+                shape.fill(.white)
+                shape.strokeBorder(lineWidth: 2)
+                Text(card.content)
+                    .font(.system(size: 120))
+                    .minimumScaleFactor(0.01)
+                    .aspectRatio(1, contentMode: .fit)
+            }.opacity(card.isFaceUp ? 1 : 0)
                 //.fill is default for shape
-            shape.opacity(isFaceUp ? 0 : 1)
-        }
-        .onTapGesture {
-            print("Tapped")
-            //isFaceUp is a struct so you can call toggle function on it
-            isFaceUp.toggle()
+            shape.opacity(card.isFaceUp ? 0 : 1)
         }
     }
 }
@@ -138,7 +138,7 @@ struct CardView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
       
-        EmojiMemoryGameView()
+        EmojiMemoryGameView(viewModel: EmojiMemoryGame())
             
     }
 }
