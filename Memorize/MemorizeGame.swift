@@ -84,7 +84,7 @@ import Foundation
 //    }
 
 
-struct MemorizeGame<CardContent> {
+struct MemorizeGame<CardContent> where CardContent: Equatable {
     private (set) var cards: Array<Card>
     
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
@@ -102,11 +102,22 @@ struct MemorizeGame<CardContent> {
         print(cards)
     }
     
-    func chooseCards(card: Card) {
-        
+    mutating func chooseCards(card: Card) {
+        let chosenIndex = index(of: card)
+        cards[chosenIndex].isFaceUp.toggle()
     }
     
-    struct Card {
+    func index(of card: Card) -> Int {
+        for index in cards.indices{
+            if cards[index].id == card.id {
+                return index
+            }
+        }
+        return 0 // FIXME: bogus!
+    }
+    
+    struct Card: Equatable, Identifiable {
+        var id = UUID()
         var isFaceUp = true
         var isMatched = false
         let content: CardContent
