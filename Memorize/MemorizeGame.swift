@@ -104,10 +104,10 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
     
     mutating func chooseCards(card: Card) {
         let chosenIndex = index(of: card)
-        cards[chosenIndex].isFaceUp.toggle()
+        cards[chosenIndex!].isFaceUp.toggle()
     }
     
-    func index(of card: Card) -> Int {
+    func index(of card: Card) -> Int? {
         for index in cards.indices{
             if cards[index].id == card.id {
                 return index
