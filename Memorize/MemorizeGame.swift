@@ -102,7 +102,20 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
         print(cards)
     }
     
-    var indexOfTheOneAndOnlyFaceUpCard: Int?
+    var indexOfTheOneAndOnlyFaceUpCard: Int? {
+        get {
+            return cards.indices.filter { index in cards[index].isFaceUp }.only }
+        set {
+            return cards.indices.forEach { cards[$0].isFaceUp = (newValue == $0)}
+//            for index in cards.indices {
+//                if index == newValue {
+//                    cards[index].isFaceUp = true
+//                } else {
+//                    cards[index].isFaceUp = false
+//                }
+//            }
+        }
+    }
     
     mutating func choose(_ card: Card) {
         if let chosenIndex = cards.firstIndex(where: { $0.id == card.id }) {
@@ -113,11 +126,7 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
                         cards[chosenIndex].isMatched = true
                         cards[potentialMatchIndex].isMatched = true
                     }
-                    indexOfTheOneAndOnlyFaceUpCard = nil
                 } else {
-                    for index in cards.indices {
-                        cards[index].isFaceUp = false
-                    }
                     indexOfTheOneAndOnlyFaceUpCard = chosenIndex
                 }
                 cards[chosenIndex].isFaceUp = true
@@ -127,9 +136,16 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
     
     struct Card: Equatable, Identifiable {
         var id = UUID()
-        var isFaceUp = true
+        var isFaceUp = false
         var isMatched = false
         let content: CardContent
         
+    }
+}
+
+
+extension Array {
+    var only: Element? {
+        count == 1 ? first : nil
     }
 }
