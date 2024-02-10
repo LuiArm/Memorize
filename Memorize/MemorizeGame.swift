@@ -73,15 +73,7 @@ import Foundation
 //}
 //
 //
-//    extension Array {
-//        var oneAndOnly: Element? {
-//            if self.count == 1 {
-//                return self.first
-//            } else {
-//                return nil
-//            }
-//        }
-//    }
+
 
 
 struct MemorizeGame<CardContent> where CardContent: Equatable {
