@@ -22,7 +22,7 @@ struct EmojiMemoryGameView: View {
             Button("Shuffle"){
                 viewModel.shuffle()
             }
-        }
+         }
         .padding()
     }
     
@@ -73,26 +73,26 @@ struct EmojiMemoryGameView: View {
 //    }
     
     var cards: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 85), spacing: 0)], spacing: 0) {
-            ForEach(viewModel.cards) { card in
+        let aspectRatio: CGFloat = 2/3
+        
+        return GeometryReader { geometry in
+            let gridItemSize = gridItemWidthThatFits(count: viewModel.cards.count, size: geometry.size, atAspectRatio: 2/3)
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize), spacing: 0)], spacing: 0) {
+                ForEach(viewModel.cards) { card in
                     CardView(card)
                         .aspectRatio(2/3, contentMode: .fit)
                         .padding(4)
                         .onTapGesture {
                             viewModel.choose(card)
                         }
+                }
             }
         }
         .foregroundStyle(.orange)
     }
-    
-    var cardThemeButtons: some View {
-        HStack(spacing: 20){
-//            transportButton
-//            flagButton
-//            foodButton
-        }
-        .font(.headline)
+
+    func gridItemWidthThatFits(count: Int, size: CGSize, atAspectRatio aspectRatio: CGFloat) -> CGFloat {
+        return 95
     }
 }
 
