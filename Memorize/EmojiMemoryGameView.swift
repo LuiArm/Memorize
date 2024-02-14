@@ -92,6 +92,22 @@ struct EmojiMemoryGameView: View {
     }
 
     func gridItemWidthThatFits(count: Int, size: CGSize, atAspectRatio aspectRatio: CGFloat) -> CGFloat {
+        var columnCount = 1
+        repeat {
+            let width = size.width / columnCount
+            let height = width / aspectRatio
+            
+            let rowCount = (count / columnCount).rounded(.up)
+            if rowCount * height < size.height {
+                return (size.width / columnCount).rounded(.down)
+            }
+            columnCount += 1
+            
+        } while columnCount < count
+        return min(size.width / count, size.height * aspectRatio)
+        
+        
+        
         return 95
     }
 }
