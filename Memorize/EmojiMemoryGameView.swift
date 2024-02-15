@@ -9,14 +9,13 @@ import SwiftUI
 
 struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame 
+    private let aspectRatio: CGFloat = 2/3
     
     var body: some View {
         VStack{
             Text("MEMORIZE").font(.largeTitle)
-            ScrollView{
                 cards
                     .animation(.default, value: viewModel.cards)
-            }
             .navigationTitle("MEMORIZE!")
             Spacer()
             Button("Shuffle"){
@@ -72,15 +71,15 @@ struct EmojiMemoryGameView: View {
 //        cardCountAdjusters(by: -1, symbol: "minus.circle")
 //    }
     
-    var cards: some View {
-        let aspectRatio: CGFloat = 2/3
+    private var cards: some View {
+        
         
         return GeometryReader { geometry in
-            let gridItemSize = gridItemWidthThatFits(count: viewModel.cards.count, size: geometry.size, atAspectRatio: 2/3)
+            let gridItemSize = gridItemWidthThatFits(count: viewModel.cards.count, size: geometry.size, atAspectRatio: aspectRatio)
             LazyVGrid(columns: [GridItem(.adaptive(minimum: gridItemSize), spacing: 0)], spacing: 0) {
                 ForEach(viewModel.cards) { card in
                     CardView(card)
-                        .aspectRatio(2/3, contentMode: .fit)
+                        .aspectRatio(aspectRatio, contentMode: .fit)
                         .padding(4)
                         .onTapGesture {
                             viewModel.choose(card)
@@ -92,7 +91,8 @@ struct EmojiMemoryGameView: View {
     }
 
     func gridItemWidthThatFits(count: Int, size: CGSize, atAspectRatio aspectRatio: CGFloat) -> CGFloat {
-        var columnCount = 1
+        let count = CGFloat(count)
+        var columnCount = 1.0
         repeat {
             let width = size.width / columnCount
             let height = width / aspectRatio
@@ -105,10 +105,7 @@ struct EmojiMemoryGameView: View {
             
         } while columnCount < count
         return min(size.width / count, size.height * aspectRatio)
-        
-        
-        
-        return 95
+
     }
 }
 
