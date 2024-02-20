@@ -25,11 +25,16 @@ struct CardView: View {
             Group {
                 shape.fill(.white)
                 shape.strokeBorder(lineWidth: 2)
+                Circle()
+                    .opacity(0.5)
+                    .overlay(
                 Text(card.content)
                     .font(.system(size: 120))
                     .minimumScaleFactor(0.01)
                     .multilineTextAlignment(.center)
                     .aspectRatio(1, contentMode: .fit)
+                    .padding(5)
+                )
                     .padding(5)
             }.opacity(card.isFaceUp ? 1 : 0)
                 //.fill is default for shape
