@@ -25,7 +25,7 @@ struct CardView: View {
             Group {
                 shape.fill(.white)
                 shape.strokeBorder(lineWidth: 2)
-                Circle()
+                Pie(startAngle: Angle(degrees: 270), endAngle: Angle(degrees: 50))
                     .opacity(0.5)
                     .overlay(
                 Text(card.content)
@@ -44,9 +44,9 @@ struct CardView: View {
     }
 }
 
-#Preview {
-    typealias Card = CardView.Card
-    CardView(Card(id: UUID(), content: "X"))
-        .padding()
-        .foregroundStyle(.green)
-}
+//#Preview {
+//    typealias Card = CardView.Card
+//    CardView(Card(id: UUID(), content: "X"))
+//        .padding()
+//        .foregroundStyle(.green)
+//}
