@@ -20,29 +20,24 @@ struct CardView: View {
     
     
     var body: some View {
-        let shape = RoundedRectangle(cornerSize: CGSize(width: 15, height:15))
-        ZStack{
-            Group {
-                shape.fill(.white)
-                shape.strokeBorder(lineWidth: 2)
-                Pie(startAngle: Angle(degrees: 270), endAngle: Angle(degrees: 50))
-                    .opacity(0.5)
-                    .overlay(
+        Pie(startAngle: Angle(degrees: 270), endAngle: Angle(degrees: 50))
+            .opacity(0.5)
+            .overlay(
                 Text(card.content)
                     .font(.system(size: 120))
                     .minimumScaleFactor(0.01)
                     .multilineTextAlignment(.center)
                     .aspectRatio(1, contentMode: .fit)
                     .padding(5)
-                )
-                    .padding(5)
-            }.opacity(card.isFaceUp ? 1 : 0)
-                //.fill is default for shape
-            shape.opacity(card.isFaceUp ? 0 : 1)
-        }
-        .opacity(!card.isMatched || card.isFaceUp ? 1 : 0)
+            )
+            .padding(5)
+            .cardify(isFaceUp: card.isFaceUp)
+            .opacity(!card.isMatched || card.isFaceUp ? 1 : 0)
     }
+    
 }
+
+
 
 //#Preview {
 //    typealias Card = CardView.Card
