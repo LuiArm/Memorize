@@ -78,7 +78,7 @@ import Foundation
 
 struct MemorizeGame<CardContent> where CardContent: Equatable {
     private (set) var cards: Array<Card>
-    
+    private (set) var score = 0
     init(numberOfPairsOfCards: Int, cardContentFactory: (Int) -> CardContent) {
         cards = []
         // add numberOfPairsOfCards X 2 cards
@@ -117,6 +117,7 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
                     if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                         cards[chosenIndex].isMatched = true
                         cards[potentialMatchIndex].isMatched = true
+                        score += 2
                     }
                 } else {
                     indexOfTheOneAndOnlyFaceUpCard = chosenIndex
