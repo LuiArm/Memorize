@@ -137,7 +137,7 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
     struct Card: Equatable, Identifiable {
         var id = UUID()
         var hasBeenSeen = false
-        var isFaceUp = true {
+        var isFaceUp = false {
             didSet {
                 if oldValue && !isFaceUp {
                     hasBeenSeen = true 

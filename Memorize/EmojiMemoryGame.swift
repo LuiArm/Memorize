@@ -57,7 +57,7 @@ class EmojiMemoryGame: ObservableObject {
     @Published private var model = createMemoryGame()
 
     var cards: Array<Card> {
-        model.score
+        model.cards
     }
     
     var color: Color {
@@ -65,7 +65,7 @@ class EmojiMemoryGame: ObservableObject {
     }
     
     var score: Int {
-        return model.score
+       model.score
     }
     // MARK: - Intents
     
