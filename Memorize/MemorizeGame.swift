@@ -117,7 +117,7 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
                     if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                         cards[chosenIndex].isMatched = true
                         cards[potentialMatchIndex].isMatched = true
-                        score += 2
+                        score += 2 + cards[chosenIndex].bonus
                     } else {
                         if cards[chosenIndex].hasBeenSeen {
                             score -= 1
@@ -139,16 +139,25 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
         var hasBeenSeen = false
         var isFaceUp = false {
             didSet {
+                if isFaceUp {
+                    startUsingBonusTime()
+                }else {
+                    stopUsingBonusTime()
+                }
                 if oldValue && !isFaceUp {
                     hasBeenSeen = true 
                 }
             }
         }
-        var isMatched = false
+        var isMatched = false {
+            didSet {
+                if isMatched {
+                    stopUsingBonusTime()
+                }
+            }
+        }
+        
         let content: CardContent
-        
-        
-        
         
         // MARK: - Bonus time
         
@@ -167,7 +176,9 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
                 return pastFaceUpTime
             }
         }
-        
+        var bonus: Int {
+            Int(bonusTimeLimit * bonusPercentRemaining)
+        }
         //the last time this card was turned face up (and is still face up)
         var lastFaceUpDate: Date?
             //the accumlated time this card has been face up in the past
@@ -180,8 +191,8 @@ struct MemorizeGame<CardContent> where CardContent: Equatable {
         }
         
         //percentage of the bonus time remaining
-        var bonusRemaining: Double {
-            (bonusTimeLimit > 0 && bonusTimeRemaining > 0) ? bonusTimeRemaining/bonusTimeLimit : 0
+        var bonusPercentRemaining: Double {
+            bonusTimeLimit > 0 ? max(0, bonusTimeLimit - faceUpTime)/bonusTimeLimit : 0
         }
         // whether the card matched during the bonus time period
         var hasEarnedBonus: Bool {

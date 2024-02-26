@@ -20,21 +20,26 @@ struct CardView: View {
     
     
     var body: some View {
-        Pie(startAngle: Angle(degrees: 270), endAngle: Angle(degrees: 50))
-            .opacity(0.5)
-            .overlay(
-                Text(card.content)
-                    .font(.system(size: 120))
-                    .minimumScaleFactor(0.01)
-                    .multilineTextAlignment(.center)
-                    .aspectRatio(1, contentMode: .fit)
-                    .padding(5)
-                    .rotationEffect(.degrees(card.isMatched ? 360 : 0 ))
-                    .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: card.isMatched)
-            )
-            .padding(5)
-            .cardify(isFaceUp: card.isFaceUp)
-            .opacity(!card.isMatched || card.isFaceUp ? 1 : 0)
+        TimelineView(AnimationTimelineSchedule(minimumInterval: 1/5)) { timeline in
+            Pie(endAngle: Angle(degrees: card.bonusPercentRemaining * 360))
+                .opacity(0.5)
+                .overlay(cardContents .padding(5))
+                .padding(5)
+                .cardify(isFaceUp: card.isFaceUp)
+                .opacity(!card.isMatched || card.isFaceUp ? 1 : 0)
+        }
+        
+    }
+    
+    var cardContents: some View {
+        Text(card.content)
+            .font(.system(size: 120))
+            .minimumScaleFactor(0.01)
+            .multilineTextAlignment(.center)
+            .aspectRatio(1, contentMode: .fit)
+           
+            .rotationEffect(.degrees(card.isMatched ? 360 : 0 ))
+            .animation(.linear(duration: 1).repeatForever(autoreverses: false), value: card.isMatched)
     }
     
 }
