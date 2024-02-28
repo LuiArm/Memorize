@@ -15,10 +15,11 @@ struct EmojiMemoryGameView: View {
     
     var body: some View {
         VStack{
-            cards
-                .foregroundStyle(viewModel.color)
+                cards.foregroundStyle(viewModel.color)
             HStack {
                 score
+                Spacer()
+                deck.foregroundStyle(viewModel.color)
                 Spacer()
                 shuffle
             }
@@ -38,77 +39,23 @@ struct EmojiMemoryGameView: View {
             }
         }
     }
-    
-//    var transportCards = ["🚌","🚌","🚲","🚲","🛻","🛻","🛺","🛺"]
-//    var transportButton: some View {
-//        Button{
-//            emojis = transportCards.shuffled()
-//        }label: {
-//            Text("Vehicles")
-//        }
-//    }
-//    
-//    var foodCards = ["🍔","🍔","🥐","🥐","🍕","🍕","🥩","🥩"]
-//    var foodButton: some View {
-//        Button{
-//            emojis = foodCards.shuffled()
-//        }label: {
-//            Text("Food")
-//        }
-//    }
-//    
-//    var flagCards = ["🇲🇽","🇲🇽","🇵🇸","🇵🇸","🇦🇷","🇦🇷","🇧🇷","🇧🇷"]
-//    var flagButton: some View {
-//        Button{
-//            emojis = flagCards.shuffled()
-//        }label: {
-//            Text("Flags")
-//        }
-//    }
-    
-//    func cardCountAdjusters(by offset: Int, symbol: String) -> some View {
-//        Button{
-//                cardCount += offset
-//        }label: {
-//            Image(systemName: symbol)
-//        }
-//        .disabled(cardCount + offset < 1 || cardCount  + offset > transportCards.count)
-//    }
-    
-//    //Computed property for lightweight view
-//    var CardAdder: some View {
-//        cardCountAdjusters(by: 1, symbol: "plus.circle")
-//    }
-//    
-//    //Computed property for lightweight view
-//    var CardRemover: some View {
-//        cardCountAdjusters(by: -1, symbol: "minus.circle")
-//    }
-    
+ 
+    // var cards needs viewbuilder since it is more than one view
     private var cards: some View {
         AspectVGrid(viewModel.cards, aspectRatio: aspectRatio) { card in
             if isDealt(card) {
                 CardView(card)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .transition(.asymmetric(insertion: .identity, removal: .identity))
                     .padding(4)
                     .overlay(FlyingNumber(number: scoreChange(causedBy: card)))
                     .zIndex(scoreChange(causedBy: card) != 0 ? 1 : 0)
                     .onTapGesture {
                         choose(card)
                     }
-                    .transition(.offset(
-                        x: CGFloat.random(in: -1000...1000),
-                        y: CGFloat.random(in: -1000...1000)
-                    ))
             }
         }
-        .onAppear {
-        //deal the cards
-            withAnimation(.easeInOut(duration: 2)){
-                for card in viewModel.cards {
-                    dealt.insert(card.id)
-                }
-            }
-        }
+        
     }
     
     @State private var dealt = Set<Card.ID>()
@@ -121,6 +68,37 @@ struct EmojiMemoryGameView: View {
         viewModel.cards.filter { !isDealt($0) }
     }
     
+    @Namespace private var dealingNamespace
+    
+    private var deck: some View {
+        ZStack{
+            ForEach(undealtCards) { card in
+                    CardView(card)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+                    .matchedGeometryEffect(id: card.id, in: dealingNamespace)
+            }
+        }
+        .frame(width: deckWidth, height: deckWidth / aspectRatio)
+        .onTapGesture {
+                deal()
+            }
+        }
+   
+    
+    private func deal() {
+        //deal the cards
+            var delay: TimeInterval = 0
+        for card in viewModel.cards {
+            withAnimation(.easeInOut(duration: 1).delay(delay)){
+                _ = dealt.insert(card.id)
+            }
+            delay += delayInterval
+        }
+    }
+    private let delayInterval: TimeInterval = 0.15
+    private let deckWidth: CGFloat = 50
+    
+    
     private func choose(_ card: Card) {
         withAnimation{
             let scoreBeforeChoosing = viewModel.score
@@ -129,6 +107,8 @@ struct EmojiMemoryGameView: View {
             lastScoreChange = (scoreChange, causedByCardId: card.id)
         }
     }
+    
+    
     
     @State private var lastScoreChange = (0, causedByCardId: UUID())
     private func scoreChange(causedBy card: Card) -> Int {
